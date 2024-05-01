@@ -1,0 +1,28 @@
+service: aws-crud
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  reguin: us-east-2
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+resource:
+  Resources:
+  taskTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: usuarios
+    AttributeDefinitions:
+    - AttributeName: id
+      AttributeType: S
+    KeySchema:
+    - AttributeName: id
+      KeyType: HASH
