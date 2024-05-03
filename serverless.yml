@@ -4,25 +4,62 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
-  reguin: us-east-2
+  region: 'us-east-1'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:471112978032:table/usuarios
 
 functions:
   api:
-    handler: index.handler
+    handler: src/index.handler
     events:
       - httpApi:
           path: /
           method: get
+  proceso:
+    handler: src/proceso.proceso
+    events:
+      - httpApi:
+          path: /proceso
+          method: post
+  getProceso:
+    handler: src/getProceso.getProceso
+    events:
+      - httpApi:
+          path: /getProceso
+          method: get
+  callProceso:
+    handler: src/callProceso.callProceso
+    events:
+      - httpApi:
+          path: /callProceso/{id}
+          method: get
+  deleteProceso:
+    handler: src/deleteProceso.deleteProceso
+    events:
+      - httpApi:
+          path: /deleteProceso/{id}
+          method: delete
+  updateProceso:
+    handler: src/updateProceso.updateProceso
+    events:
+      - httpApi:
+          path: /updateProceso/{id}
+          method: put
 
-resource:
+resources:
   Resources:
-  taskTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: usuarios
-    AttributeDefinitions:
-    - AttributeName: id
-      AttributeType: S
-    KeySchema:
-    - AttributeName: id
-      KeyType: HASH
+    taskTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usuarios
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
